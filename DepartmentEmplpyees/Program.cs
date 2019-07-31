@@ -155,6 +155,11 @@ namespace DepartmentsEmployees
                 2: Engineering
                 3: Design
              */
+            Console.WriteLine(title);
+            foreach (var d in departments) {
+                Console.WriteLine($"{d.Id}: {d.DeptName}");
+            };
+
         }
 
         /// <summary>
@@ -186,6 +191,13 @@ namespace DepartmentsEmployees
                 3: Jamal Ross. Dept: Design
 
              */
+
+
+            Console.WriteLine(title);
+            foreach(var e in employees)
+            {
+                Console.WriteLine($"{e.Id}: {e.FirstName} {e.LastName}. " + (e.Department != null ? $" Dept: {e.Department.DeptName}" : ""));
+            }
         }
 
 

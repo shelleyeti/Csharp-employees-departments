@@ -381,10 +381,24 @@ namespace DepartmentsEmployees.Data
         /// </summary>
         public void UpdateEmployee(int id, Employee employee)
         {
-            /*
-             * TODO: Complete this method using an UPDATE statement with SQL
-             *  Remember to use SqlParameters!
-             */
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"UPDATE Employee
+                                           SET FirstName = @FirstName,
+                                                LastName = @LastName,
+                                                DepartmentId = @DepartmentId
+                                         WHERE Id = @id";
+                    cmd.Parameters.Add(new SqlParameter("@FirstName", employee.FirstName));
+                    cmd.Parameters.Add(new SqlParameter("@LastName", employee.LastName));
+                    cmd.Parameters.Add(new SqlParameter("@DepartmentId", employee.DepartmentId));
+                    cmd.Parameters.Add(new SqlParameter("@id", id));
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
         }
 
 
@@ -393,10 +407,16 @@ namespace DepartmentsEmployees.Data
         /// </summary>
         public void DeleteEmployee(int id)
         {
-            /*
-             * TODO: Complete this method using a DELETE statement with SQL
-             *  Remember to use SqlParameters!
-             */
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = "DELETE FROM Employee WHERE Id = @id";
+                    cmd.Parameters.Add(new SqlParameter("@id", id));
+                    cmd.ExecuteNonQuery();
+                }
+            }
         }
     }
 }

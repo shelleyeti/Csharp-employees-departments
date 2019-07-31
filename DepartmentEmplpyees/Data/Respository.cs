@@ -277,12 +277,34 @@ namespace DepartmentsEmployees.Data
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
 
-                    /*
-                     * TODO: Complete this method
-                     *  Look at GetAllEmployeesWithDepartmentByDepartmentId(int departmentId) for inspiration.
-                     */
+                    cmd.CommandText = $@"SELECT e.Id, e.FirstName, e.LastName, e.DepartmentId,
+                                                d.DeptName
+                                           FROM Employee e INNER JOIN Department d ON e.DepartmentID = d.id";
+                    SqlDataReader reader = cmd.ExecuteReader();
 
-                    return null;
+                    List<Employee> employees = new List<Employee>();
+                    while (reader.Read())
+                    {
+                        Employee employee = new Employee
+                        {
+                            Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                            FirstName = reader.GetString(reader.GetOrdinal("FirstName")),
+                            LastName = reader.GetString(reader.GetOrdinal("LastName")),
+                            DepartmentId = reader.GetInt32(reader.GetOrdinal("DepartmentId")),
+                            Department = new Department
+                            {
+                                Id = reader.GetInt32(reader.GetOrdinal("DepartmentId")),
+                                DeptName = reader.GetString(reader.GetOrdinal("DeptName"))
+                            }
+                        };
+
+                        employees.Add(employee);
+                    }
+
+                    reader.Close();
+
+                    return employees;
+
                 }
             }
         }
@@ -341,10 +363,16 @@ namespace DepartmentsEmployees.Data
         /// </summary>
         public void AddEmployee(Employee employee)
         {
-            /*
-             * TODO: Complete this method by using an INSERT statement with SQL
-             *  Remember to use SqlParameters!
-             */
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    // More string interpolation
+                    cmd.CommandText = $"INSERT INTO Employee (FirstName, LastName, DepartmentId) Values ('{employee.FirstName}', '{employee.LastName}', {employee.DepartmentId})";
+                    cmd.ExecuteNonQuery();
+                }
+            }
 
         }
 
